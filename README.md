@@ -1,1 +1,1 @@
-# Metodyki-projektowania-i-modelowania-system-w-1
+# Metodyki-projektowania-i-modelowania-systemów-1 project
