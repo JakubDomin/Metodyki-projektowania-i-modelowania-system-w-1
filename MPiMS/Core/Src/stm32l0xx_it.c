@@ -51,7 +51,7 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-char buffer[1];
+
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -148,8 +148,9 @@ void EXTI4_15_IRQHandler(void)
   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
 
   /* USER CODE END EXTI4_15_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(lewy_int_Pin);
+  HAL_GPIO_EXTI_IRQHandler(blue_Pin);
   HAL_GPIO_EXTI_IRQHandler(prawy_int_Pin);
+  HAL_GPIO_EXTI_IRQHandler(lewy_int_Pin);
   /* USER CODE BEGIN EXTI4_15_IRQn 1 */
 
   /* USER CODE END EXTI4_15_IRQn 1 */
@@ -161,8 +162,6 @@ void EXTI4_15_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
-	HAL_UART_Receive(&huart2, (uint8_t*)buffer, 1, 10);
-	HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */

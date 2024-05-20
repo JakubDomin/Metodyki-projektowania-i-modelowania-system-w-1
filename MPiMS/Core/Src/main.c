@@ -65,7 +65,7 @@ void SystemClock_Config(void);
 
 volatile uint8_t collision_flag = 0;
 volatile uint8_t remote_flag = 1;
-extern char buffer[1];
+char buffer[3];
 
 int __io_putchar(int ch)
 {
@@ -86,6 +86,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   } else if(GPIO_Pin == prawy_int_Pin){
 	HAL_GPIO_WritePin(GPIOA, LD2_Pin, GPIO_PIN_SET);
 	collision_flag = 1;
+  } else if(GPIO_Pin == blue_Pin){
+	remote_flag = 0;
+	collision_flag = 0;
   }
 }
 
@@ -121,12 +124,12 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_TIM2_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
-  HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
   memset(buffer, 0, sizeof(buffer));
+  HAL_TIM_Base_Start_IT(&htim2);
   __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
 
 
@@ -137,12 +140,14 @@ int main(void)
 
   while (1)
   {
+	  HAL_UART_Receive(&huart1, buffer, sizeof(buffer), 1000);
+
 	  if(!remote_flag)
 	  {
 		  left_motor_drive(70,"FORWARD");
 		  right_motor_drive(70,"FORWARD");
 
-		  if(collision_flag)
+		  if(1 == collision_flag)
 		  {
 			left_motor_drive(70,"BACKWARD");
 			right_motor_drive(70,"BACKWARD");
@@ -152,41 +157,46 @@ int main(void)
 			left_motor_drive(70,"FORWARD");
 			right_motor_drive(70,"BACKWARD");
 			HAL_Delay(300);
+			left_motor_drive(0,"FAST STOP");
+			right_motor_drive(0,"FAST STOP");
+		  }
+	  }
+	  else
+	  {
+		  if(!strcmp(buffer, "w\r\n"))
+		  {
+			  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
+			  left_motor_drive(70,"FORWARD");
+			  right_motor_drive(70,"FORWARD");
+		  }
+		  else if(!strcmp(buffer, "s\r\n"))
+		  {
+			  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
+			  left_motor_drive(70,"BACKWARD");
+			  right_motor_drive(70,"BACKWARD");
+		  }
+		  else if(!strcmp(buffer, "a\r\n"))
+		  {
+			  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
+			  left_motor_drive(70,"BACKWARD");
+			  right_motor_drive(70,"FORWARD");
+		  }
+		  else if(!strcmp(buffer, "d\r\n"))
+		  {
+			  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
+			  left_motor_drive(70,"FORWARD");
+			  right_motor_drive(70,"BACKWARD");
+		  }
+		  else if(!strcmp(buffer, "x\r\n"))
+		  {
+			  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
+			  left_motor_drive(0,"FAST STOP");
+			  right_motor_drive(0,"FAST STOP");
 		  }
 	  }
 
-	  if(!strcmp(buffer, "w"))
-	  {
-		  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
-		  left_motor_drive(70,"FORWARD");
-		  right_motor_drive(70,"FORWARD");
-	  }
-	  else if(!strcmp(buffer, "s"))
-	  {
-		  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
-		  left_motor_drive(70,"BACKWARD");
-		  right_motor_drive(70,"BACKWARD");
-	  }
-	  else if(!strcmp(buffer, "a"))
-	  {
-		  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
-		  left_motor_drive(70,"BACKWARD");
-		  right_motor_drive(70,"FORWARD");
-	  }
-	  else if(!strcmp(buffer, "d"))
-	  {
-		  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
-		  left_motor_drive(70,"FORWARD");
-		  right_motor_drive(70,"BACKWARD");
-	  }
-	  else if(!strcmp(buffer, "x"))
-	  {
-		  HAL_GPIO_TogglePin(GPIOA, LD2_Pin);
-		  left_motor_drive(0,"FAST STOP");
-		  right_motor_drive(0,"FAST STOP");
-		  HAL_Delay(100);
-		  remote_flag = 0;
-	  }
+	  memset(buffer, 0, sizeof(buffer));
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -235,7 +245,8 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_USART2;
+  PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
