@@ -1,4 +1,4 @@
-# Project of remote controlled vehicle with Bluetooth control and obstacle avoidance.
+# Project of remotely controlled vehicle with Bluetooth control and obstacle avoidance.
 
 ## Project Description:
 
