@@ -1,6 +1,9 @@
-# Project of remote controlled vehicle with Bluetooth control and obstacle avoidance.
+# Project of remotely controlled vehicle with Bluetooth control and obstacle avoidance.
 
 ## Project Description:
+This project is a remotelly controlled vehicle with bluetooth connection and obstacle avoidance. It features two modes
+of operation toggled via buttons on the mictrocontroller board. Remote control is possible thanks to thecommands
+sent through connected android application (not part of the project).
 
 It is a remote controlled robot vehicle utilizing:
 * STM32 Nucleo L053R8 microcontroller
@@ -10,3 +13,5 @@ It is a remote controlled robot vehicle utilizing:
 * 2 x SPDT limit switch for collision detection
 * 7.4 V 2400 mAh LiPo battery
 * plastic wheels, wooden chassis
+
+full documentation is in the "docs" folder.
