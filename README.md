@@ -14,4 +14,4 @@ It is a remote controlled robot vehicle utilizing:
 * 7.4 V 2400 mAh LiPo battery
 * plastic wheels, wooden chassis
 
-full documentation is in the "docs" folder.
+full documentation is in the "documentation" folder.
