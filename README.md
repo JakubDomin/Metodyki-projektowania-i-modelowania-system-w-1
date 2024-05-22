@@ -2,7 +2,7 @@
 
 ## Project Description:
 This project is a remotelly controlled vehicle with bluetooth connection and obstacle avoidance. It features two modes
-of operation toggled via buttons on the mictrocontroller board. Remote control is possible thanks to thecommands
+of operation toggled via buttons on the mictrocontroller board. Remote control is possible thanks to the commands
 sent through connected android application (not part of the project).
 
 It is a remote controlled robot vehicle utilizing:
