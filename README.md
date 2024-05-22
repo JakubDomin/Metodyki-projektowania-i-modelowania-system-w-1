@@ -15,3 +15,4 @@ It is a remote controlled robot vehicle utilizing:
 * plastic wheels, wooden chassis
 
 full documentation is in the "documentation" folder.
+Code is provided in the "source" folder.
